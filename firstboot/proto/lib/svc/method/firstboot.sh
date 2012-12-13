@@ -53,6 +53,16 @@ w
 q
 EOF
 
+#edit /etc/hosts to insert fqdn and comply with etc/hosts convention
+DOMAINNAME=`svcprop -p config/search svc:/network/dns/client:default`
+ed - << EOF
+r /etc/hosts
+g/$HOSTNAME/s/$HOSTNAME.*$/$HOSTNAME.$DOMAINNAME $HOSTNAME
+.
+w
+q
+EOF
+
 
 # Record that this script's work is done
 svccfg -s site/firstboot:default setprop config/completed = true

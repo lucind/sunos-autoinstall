@@ -1,0 +1,2 @@
+#!/usr/bin/bash
+pkgsend publish -d proto -s /repo firstboot.p5m

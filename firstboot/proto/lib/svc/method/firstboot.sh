@@ -40,6 +40,7 @@ w
 q
 EOF
 svcadm refresh ssh
+svcadm restart ssh
 
 #edit /etc/default/login to allow root login on other than console
 ed - << EOF

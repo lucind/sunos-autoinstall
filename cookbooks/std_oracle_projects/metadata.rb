@@ -4,3 +4,4 @@ license          "All rights reserved"
 description      "Installs/Configures std_oracle_projects"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "0.0.1"
+require "std_oracle_groups"

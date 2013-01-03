@@ -1,9 +1,10 @@
 Description
 ===========
-create oracle projects
+create oracle project
 
 Requirements
 ============
+standard oracle groups must already exist (std_oracle_groups cookbook)
 
 Attributes
 ==========

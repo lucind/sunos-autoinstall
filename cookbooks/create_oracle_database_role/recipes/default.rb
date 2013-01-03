@@ -8,7 +8,7 @@ bash "create the oracle database role" do
 
     NAME=oracle
     ID=$( echo $(( 0x`echo -n $NAME |digest -a sha1 |cut -b1-4` )) )
-    (rolemod -K type=role $NAME) || roleadd -u $ID -g oinstall -G dba,oper -K  project=oracleproject -K roleauth=user -m $NAME
+    (rolemod -K type=role $NAME $> /dev/null) || roleadd -u $ID -g oinstall -G dba,oper -K  project=oracleproject -K roleauth=user -m $NAME
 
   EOH
 end

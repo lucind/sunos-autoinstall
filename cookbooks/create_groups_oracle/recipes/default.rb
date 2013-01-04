@@ -5,7 +5,7 @@
 bash "create_groups_oracle" do
   user "root"
   code <<-EOH
-
+set -x
     # create Oracle Inventory group
     NAME=oinstall
     ID=$( echo $(( 0x`echo -n $NAME |digest -a sha1 |cut -b1-4` )) )

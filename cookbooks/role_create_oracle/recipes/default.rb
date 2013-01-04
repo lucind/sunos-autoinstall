@@ -7,7 +7,7 @@ include_recipe "create_project_oracle"
 bash "role_create_oracle" do
   user "root"
   code <<-EOH
-
+set -x
     NAME=oracle
     ID=$( echo $(( 0x`echo -n $NAME |digest -a sha1 |cut -b1-4` )) )
     (rolemod -K type=role $NAME &> /dev/null) || roleadd -u $ID -g oinstall -G dba,oper -K  project=oracleproject -K roleauth=user -m $NAME

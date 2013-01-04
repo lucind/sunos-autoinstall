@@ -7,7 +7,7 @@ include_recipe "create_groups_oracle"
 bash "create_project_oracle" do
   user "root"
   code <<-EOH
-
+set -x
     NAME=oracleproject
     ID=$( echo $(( 0x`echo -n $NAME |digest -a sha1 |cut -b1-4` )) )
     (projmod -K "" $NAME &>/dev/null) || projadd  -p $ID -G oinstall -c "Oracle Project" $NAME

@@ -7,10 +7,27 @@ include_recipe "create_project_oracle"
 bash "role_create_oracle" do
   user "root"
   code <<-EOH
-set -x
+
     NAME=oracle
     ID=$( echo $(( 0x`echo -n $NAME |digest -a sha1 |cut -b1-4` )) )
     (rolemod -K type=role $NAME &> /dev/null) || roleadd -u $ID -g oinstall -G dba,oper -K  project=oracleproject -K roleauth=user -m $NAME
+
+# create central Oracle inventory directory
+if [ ! -x /var/opt/oracle ]; then mkdir -p /var/opt/oracle; fi
+chown oracle:oinstall /var/opt/oracle
+chmod 775 /var/opt/oracle
+
+# create oracle environment variable setup
+if [ ! -x ~oracle/tmp ]; then su - oracle -c 'mkdir ~/tmp'; fi
+(grep 'umask 022' ~oracle/.bash_profile &>/dev/null) || echo 'umask 022' >> ~oracle/.bash_profile; chown oracle:install ~oracle/.bash_profile
+
+#For databases, set fs blocksize to match db blocksize, usually 8k
+NAME=oracle
+ROLEFS=`su - $NAME -c 'zfs list -H -o name $HOME' |tail -1`
+zfs set recordsize=8k $ROLEFS
+
+# allow user to assume oracle role
+usermod -K roles+=oracle ops
 
   EOH
 end

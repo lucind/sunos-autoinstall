@@ -3,10 +3,10 @@
     <service name="system/config-user" version="1">
       <instance name="default" enabled="true">
         <property_group name="user_account">
-          <propval name="login" value="oracle"/>
-          <propval name="password" value="$5$xT5lq9Wo$1sEJlaID0eA/MKA0gXB11htSGWgsPY34t.sbtFDRa52"/>
-          <propval name="description" value="oracle"/>
+          <propval name="login" value="ops"/>
+          <propval name="password" value="$5$pWr/CxPI$GwH2g7ZhJ1wD9xZ9Xe4puqub6Zpu0xVexEPmDuEbY82"/>
           <propval name="shell" value="/usr/bin/bash"/>
+          <propval name="uid" value="100"/>
           <propval name="gid" value="10"/>
           <propval name="type" value="normal"/>
           <propval name="roles" value="root"/>
@@ -19,12 +19,12 @@
       </instance>
     </service>
 
-    <service version="1" name="system/identity">
-      <instance enabled="true" name="node">
-        <property_group name="config">
-           <propval name="nodename" value="inle"/>
-        </property_group>
-      </instance>
+    <service name="system/identity" version="1" type="service">
+        <instance name="node" enabled="true">
+            <property_group name="config" type="application">
+	            <propval name="nodename" value="inle"/>
+            </property_group>
+        </instance>
     </service>
 
     <service name="system/console-login" version="1">

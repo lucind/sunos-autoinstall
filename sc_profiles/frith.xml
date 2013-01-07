@@ -5,12 +5,16 @@
         <property_group name="user_account">
           <propval name="login" value="ops"/>
           <propval name="password" value="$5$pWr/CxPI$GwH2g7ZhJ1wD9xZ9Xe4puqub6Zpu0xVexEPmDuEbY82"/>
+          <propval name="shell" value="/usr/bin/bash"/>
+          <propval name="uid" value="100"/>
+          <propval name="gid" value="10"/>
           <propval name="type" value="normal"/>
+          <propval name="roles" value="root"/>
           <propval name="profiles" value="System Administrator"/>
         </property_group>
         <property_group name="root_account">
             <propval name="password" value="$5$i6KpjRvV$YitCALUCfHX/t.hBA4/SUqNry5d4ffIBPNfL2H8VVv4"/>
-            <propval name="type" value="normal"/>
+            <propval name="type" value="role"/>
         </property_group>
       </instance>
     </service>
@@ -18,7 +22,7 @@
     <service name="system/identity" version="1" type="service">
         <instance name="node" enabled="true">
             <property_group name="config" type="application">
-	<propval name="nodename" value="frith"/>
+	            <propval name="nodename" value="frith"/>
             </property_group>
         </instance>
     </service>
@@ -50,7 +54,7 @@
     <service name="system/environment" version="1">
       <instance name="init" enabled="true">
         <property_group name="environment">
-          <propval name="LC_ALL" value="C"/>
+          <propval name="LANG" value="en_US.UTF-8"/>
         </property_group>
       </instance>
     </service>

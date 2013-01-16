@@ -1,5 +1,5 @@
 set name=pkg.fmri value=firstboot@1.0,5.11
 set name=pkg.summary value="firstboot setup script"
 set name=pkg.description value="Script that runs at first boot after AI installation"
-file path=lib/svc/manifest/site/firstboot.xml mode=0444 owner=root group=sys
-file path=lib/svc/method/firstboot.sh mode=0555 owner=root group=sys
+file path=var/svc/manifest/site/firstboot.xml mode=0444 owner=root group=sys
+file path=var/svc/method/site/firstboot.sh mode=0555 owner=root group=sys

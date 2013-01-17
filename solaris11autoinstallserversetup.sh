@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+set -x
 
 # -- solaris 11 ai sever setup --
 
@@ -7,7 +8,9 @@
 # As of 11.1, using text installer image and specifying no network may be less painful than "live" / full / gui install stuff.
 
 # at least a handwave at system hardening:
-http://docs.oracle.com/cd/E26502_01/index.html
+netservices limited
+
+# http://docs.oracle.com/cd/E26502_01/index.html
 
 # sendmail is noisy and misconfigured, so kill it:
 svcadm disable sendmail
@@ -18,20 +21,20 @@ svcadm disable sendmail-client
 # http://docs.oracle.com/cd/E26502_01/html/E29002/dnsref-31.html#dnsref-36
 
 #identity and dns stuff
-ipadm create-ip net0
-ipadm create-addr -a 10.1.87.99/1 net0
-echo "10.1.87.99 thlayli.ebs.modcloth.com tharn" >>/etc/hosts
-route -p add default 10.1.87.1
-
-svccfg -s system/name-service/switch setprop 'config/host = astring: "files dns mdns"'
-svccfg -s system/name-service/switch refresh
-
-svccfg -s network/dns/client setprop 'config/search = astring: "(ebs.modcloth.com)"'
-svccfg -s network/dns/client setprop 'config/nameserver = net_address: (10.1.5.21 10.1.5.21)'
-svccfg -s network/dns/client refresh
-svccfg -s system/identity:node setprop 'config/nodename = astring: "thlayli"'
-svccfg -s system/identity:node setprop 'config/loopback = astring: "thlayli"'
-svccfg -s system/identity:node refresh
+#ipadm create-ip net0
+#ipadm create-addr -a 10.1.87.99/1 net0
+#echo "10.1.87.99 thlayli.ebs.modcloth.com tharn" >>/etc/hosts
+#route -p add default 10.1.87.1
+#
+#svccfg -s system/name-service/switch setprop 'config/host = astring: "files dns mdns"'
+#svccfg -s system/name-service/switch refresh
+#
+#svccfg -s network/dns/client setprop 'config/search = astring: "(ebs.modcloth.com)"'
+#svccfg -s network/dns/client setprop 'config/nameserver = net_address: (10.1.5.21 10.1.5.21)'
+#svccfg -s network/dns/client refresh
+#svccfg -s system/identity:node setprop 'config/nodename = astring: "thlayli"'
+#svccfg -s system/identity:node setprop 'config/loopback = astring: "thlayli"'
+#svccfg -s system/identity:node refresh
 
 nscfg export svc:/network/dns/client:default
 
@@ -42,7 +45,7 @@ nscfg export svc:/network/dns/client:default
 zfs create rpool/export/repoSolaris11
 
 #Software Installation
-pfexec pkg set-publisher -g http://localhost:80/ solaris
+pkg set-publisher -g http://localhost:80/ solaris
 
 #Service Management
 svcadm enable application/pkg/server
@@ -54,7 +57,8 @@ zfs set atime=off rpool/export/repoSolaris11
 pkgrepo create /export/repoSolaris11
 
 #Copy the Repository
-pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 '*'
+#pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 '*'
+
 #if you get disconnected during this multi-gig xfer, don't start over, just contunue like this:
 #  PROCESS                    ITEMS       GET (MB)        SEND (MB)
 #  ...
@@ -64,7 +68,7 @@ pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 '*'
 #  pkgrecv: Cached files were preserved in the following directory:
 #          /var/tmp/pkgrecv-fOGaIg
 #          Use pkgrecv -c to resume the interrupted download.
-pkgrecv -c /var/tmp/pkgrecv-fOGaIg -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 '*'
+# pkgrecv -c /var/tmp/pkgrecv-fOGaIg -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 '*'
 
 #Build a Search Index and Snapshot the Repository
 pkgrepo -s /export/repoSolaris11 refresh
@@ -72,12 +76,11 @@ zfs snapshot rpool/export/repoSolaris11@initial
 
 #Retrieving Packages Using a File Interface
 #Configure an NFS Share
-zfs create -o mountpoint=/export/repoSolaris11 rpool/repoSolaris11
-zfs set share=name=s11repo,path=/export/repoSolaris11,prot=nfs rpool/repoSolaris11 name=s11repo,path=/export/repoSolaris11,prot=nfs
-zfs set sharenfs=on rpool/repoSolaris11
+zfs set share=name=s11repo,path=/export/repoSolaris11,prot=nfs rpool/export/repoSolaris11
+zfs set sharenfs=on rpool/export/repoSolaris11
 
 #Set the Publisher Origin to the File Repository URI
-pkg set-publisher -G '*' -M '*' -g /net/host1/export/repoSolaris11/ solaris
+pkg set-publisher -G '*' -M '*' -g /net/localhost/export/repoSolaris11/ solaris
 
 #Retrieving Packages Using an HTTP Interface
 #Configure the Repository Server Service
@@ -87,8 +90,8 @@ svcprop -p pkg/inst_root application/pkg/server
 
 #Start the Repository Service
 #Restart the pkg.depotd repository service.
-$ svcadm refresh application/pkg/server
-$ svcadm enable application/pkg/server
+svcadm refresh application/pkg/server
+svcadm enable application/pkg/server
 
 #Set the Publisher Origin to the HTTP Repository URI
 #Execute the following command on each client to reset the origin for the solaris publisher:
@@ -104,10 +107,11 @@ pkgrepo rebuild -s /export/repoSolaris11
 svcadm restart application/pkg/server:default
 
 #add your "first boot" script to the repo;
-mkdir -p proto/var/svc/manifest/site
-mkdir -p proto/var/svc/method/site/
+rm -Rf ~/proto
+mkdir -p ~/proto/var/svc/manifest/site
+mkdir -p ~/proto/var/svc/method/site/
 
-cat > proto/var/svc/manifest/site/firstboot.xml <<thing1
+cat > ~/proto/var/svc/manifest/site/firstboot.xml <<thing1
 <?xml version="1.0" ?>
 <!DOCTYPE service_bundle
   SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
@@ -175,7 +179,7 @@ cat > proto/var/svc/manifest/site/firstboot.xml <<thing1
 </service_bundle>
 thing1
 
-cat > proto/var/svc/method/site/firstboot.sh <<thing2
+cat > ~/proto/var/svc/method/site/firstboot.sh <<thing2
 #!/usr/bin/bash
 (
 
@@ -250,4 +254,15 @@ smf_method_exit \$SMF_EXIT_TEMP_DISABLE method_completed "Configuration complete
 
 thing2
 
-pkgsend publish -d proto -s /export/repoSolaris11 firstboot.p5m
+pkgsend publish -d ~/proto -s /export/repoSolaris11 firstboot.p5m
+#rm -Rf ~/proto
+
+#Install Install Service
+pkg install install/installadm
+installadm create-service
+svcadm refresh system/install/server:default
+
+#Enable Multicast DNS
+svcadm enable /network/dns/multicast
+
+#sort out dhcp config - no instructions on conf file!

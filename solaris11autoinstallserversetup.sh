@@ -1,5 +1,6 @@
-#!/usr/bin/bash
+#! /usr/bin/bash
 set -x
+set -o verbose
 
 # -- solaris 11 ai sever setup --
 
@@ -45,7 +46,7 @@ nscfg export svc:/network/dns/client:default
 zfs create rpool/export/repoSolaris11
 
 #Software Installation
-pkg set-publisher -g http://localhost:80/ solaris
+#pkg set-publisher -g http://localhost:80/ solaris
 
 #Service Management
 svcadm enable application/pkg/server

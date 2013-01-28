@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/sbin/sh
 # -- solaris 11 ai sever setup --
 set -x
 set -o verbose

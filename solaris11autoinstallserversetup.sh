@@ -18,13 +18,7 @@ svccfg -s system/identity:node setprop 'config/loopback = astring: "thlayli"'
 svccfg -s system/identity:node refresh
 nscfg export svc:/network/dns/client:default
 
-#Creating a ZFS Dataset
 zfs create rpool/export/repoSolaris11
-
-#Software Installation
-#pkg set-publisher -g http://localhost:80/ solaris
-
-#Service Management
 svcadm enable application/pkg/server
 
 #Tip - For better performance when updating the repository, set atime to off.
@@ -35,6 +29,7 @@ pkgrepo create /export/repoSolaris11
 
 #Copy the Repository
 #pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 '*'
+
 
 #Configure an NFS Share
 zfs set share=name=s11repo,path=/export/repoSolaris11,prot=nfs rpool/export/repoSolaris11
@@ -48,10 +43,9 @@ zfs set sharenfs=on rpool/export/repoSolaris11
 svccfg -s application/pkg/server setprop pkg/inst_root=/export/repoSolaris11
 svccfg -s application/pkg/server setprop pkg/readonly=true
 
-#Start the Repository Service
 #Restart the pkg.depotd repository service.
-svcadm refresh application/pkg/server
 svcadm disable application/pkg/server
+svcadm refresh application/pkg/server
 svcadm enable application/pkg/server
 
 #Set the Publisher Origin to the HTTP Repository URI

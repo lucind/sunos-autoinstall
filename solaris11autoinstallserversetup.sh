@@ -5,16 +5,16 @@ set -o verbose
 
 #identity and dns stuff
 ipadm create-ip net0
-ipadm create-addr -a 10.1.87.99/1 net0
-echo "10.1.87.99 thlayli.ebs.modcloth.com tharn" >>/etc/hosts
-route -p add default 10.1.87.1
+ipadm create-addr -a 10.0.2.15/24 net0
+echo "10.0.2.15 testai.modcloth.int testai" >>/etc/hosts
+route -p add default 10.0.2.15
 svccfg -s system/name-service/switch setprop 'config/host = astring: "files dns mdns"'
 svccfg -s system/name-service/switch refresh
-svccfg -s network/dns/client setprop 'config/search = astring: "(ebs.modcloth.com)"'
+svccfg -s network/dns/client setprop 'config/search = astring: "(modcloth.int)"'
 svccfg -s network/dns/client setprop 'config/nameserver = net_address: (10.1.5.21 10.1.5.21)'
 svccfg -s network/dns/client refresh
-svccfg -s system/identity:node setprop 'config/nodename = astring: "thlayli"'
-svccfg -s system/identity:node setprop 'config/loopback = astring: "thlayli"'
+svccfg -s system/identity:node setprop 'config/nodename = astring: "testai"'
+svccfg -s system/identity:node setprop 'config/loopback = astring: "testai"'
 svccfg -s system/identity:node refresh
 nscfg export svc:/network/dns/client:default
 

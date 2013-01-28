@@ -28,7 +28,7 @@ zfs set atime=off rpool/export/repoSolaris11
 pkgrepo create /export/repoSolaris11
 
 #Copy the Repository
-#pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 '*'
+pkgrecv -s http://thlayli.ebs.modcloth.com/solaris -d /export/repoSolaris11 '*'
 
 
 #Configure an NFS Share

@@ -32,7 +32,7 @@ svcadm enable application/pkg/server
 svcadm refresh svc:/application/pkg/server:default
 svcadm restart svc:/application/pkg/server:default
 
-exit 1
+#exit 1
 # publish your custom firstboot script
 pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
 

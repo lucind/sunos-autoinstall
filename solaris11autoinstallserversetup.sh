@@ -1,4 +1,4 @@
-#!/usr/sbin/sh
+#!/bin/bash
 # -- solaris 11 ai sever setup --
 set -x
 set -o verbose
@@ -26,12 +26,20 @@ pkgrepo create /export/repoSolaris11
 pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 'screen'
 zfs snapshot rpool/export/repoSolaris11@initialpkgrecv
 svccfg -s application/pkg/server setprop pkg/inst_root=/export/repoSolaris11
-svcadm refresh application/pkg/server
-svcadm restart application/pkg/server
+svccfg -s application/pkg/server setprop pkg/readonly=false
+svcadm disable application/pkg/server
 pkgrepo set -s /export/repoSolaris11 publisher/prefix=solaris
-pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
-pkgrepo rebuild -s /export/repoSolaris11
 pkgrepo refresh -s /export/repoSolaris11
+pkgrepo rebuild -s /export/repoSolaris11
+while [ $(sleep 1;svcs -H pkg/server |cut -f1 -d" ") != "disabled" ]
+  do echo "waiting for pkg/server service to go down"
+done
+svcadm refresh application/pkg/server
+svcadm enable application/pkg/server
+while [ $(sleep 1;svcs -H pkg/server |cut -f1 -d" ") != "online" ]
+  do echo "waiting for pkg/server service to come up"
+done
+pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
 
 #Enable Multicast DNS
 svcadm enable /network/dns/multicast

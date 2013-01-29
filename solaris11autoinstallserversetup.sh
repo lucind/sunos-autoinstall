@@ -28,6 +28,7 @@ zfs snapshot rpool/export/repoSolaris11@initialpkgrecv
 svccfg -s application/pkg/server setprop pkg/inst_root=/export/repoSolaris11
 svcadm refresh application/pkg/server
 svcadm restart application/pkg/server
+pkgrepo set -s /export/repoSolaris11 publisher/prefix=solaris
 pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
 pkgrepo rebuild -s /export/repoSolaris11
 pkgrepo refresh -s /export/repoSolaris11

@@ -4,6 +4,7 @@ set -x
 set -o verbose
 
 #identity and dns stuff
+netadm enable -p ncp DefaultFixed
 ipadm create-ip net0
 ipadm create-addr -a 10.0.2.15/24 net0
 echo "10.0.2.15 testai.modcloth.int testai" >>/etc/hosts
@@ -36,12 +37,12 @@ svcadm restart svc:/application/pkg/server:default
 # publish your custom firstboot script
 pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
 
+#Enable Multicast DNS
+svcadm enable /network/dns/multicast
+
 #Install Install Service
 pkg install install/installadm
 installadm create-service
 svcadm refresh system/install/server:default
-
-#Enable Multicast DNS
-svcadm enable /network/dns/multicast
 
 #sort out dhcp config - no instructions on conf file!

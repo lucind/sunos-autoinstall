@@ -26,17 +26,11 @@ pkgrepo create /export/repoSolaris11
 pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 'screen'
 zfs snapshot rpool/export/repoSolaris11@initialpkgrecv
 svccfg -s application/pkg/server setprop pkg/inst_root=/export/repoSolaris11
+svcadm refresh application/pkg/server
+svcadm restart application/pkg/server
+pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
 pkgrepo rebuild -s /export/repoSolaris11
 pkgrepo refresh -s /export/repoSolaris11
-zfs snapshot rpool/export/repoSolaris11@rebuilt
-svcadm refresh application/pkg/server
-svcadm enable application/pkg/server
-svcadm refresh svc:/application/pkg/server:default
-svcadm restart svc:/application/pkg/server:default
-
-#exit 1
-# publish your custom firstboot script
-pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
 
 #Enable Multicast DNS
 svcadm enable /network/dns/multicast

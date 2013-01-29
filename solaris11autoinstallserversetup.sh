@@ -4,7 +4,8 @@ set -x
 set -o verbose
 
 #identity and dns stuff
-netadm enable -p ncp DefaultFixed
+netadm enable -p ncp Automatic
+netadm enable -p loc Automatic
 ipadm create-ip net0
 ipadm create-addr -a 10.0.2.15/24 net0
 echo "10.0.2.15 testai.modcloth.int testai" >>/etc/hosts

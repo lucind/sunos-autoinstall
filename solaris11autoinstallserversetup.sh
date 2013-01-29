@@ -11,7 +11,7 @@ route -p add default 10.0.2.15
 svccfg -s system/name-service/switch setprop 'config/host = astring: "files dns mdns"'
 svccfg -s system/name-service/switch refresh
 svccfg -s network/dns/client setprop 'config/search = astring: "(modcloth.int)"'
-svccfg -s network/dns/client setprop 'config/nameserver = net_address: (10.1.5.21 10.1.5.21)'
+svccfg -s network/dns/client setprop 'config/nameserver = net_address: (10.1.5.21 8.8.8.8)'
 svccfg -s network/dns/client refresh
 svccfg -s system/identity:node setprop 'config/nodename = astring: "testai"'
 svccfg -s system/identity:node setprop 'config/loopback = astring: "testai"'

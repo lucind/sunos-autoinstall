@@ -45,8 +45,8 @@ pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
 svcadm enable /network/dns/multicast
 
 #Install Install Service
+pkg set-publisher -g http://pkg.oracle.com/solaris/release solaris
 pkg install install/installadm
-installadm create-service
-svcadm refresh system/install/server:default
+installadm create-service -a sparc -y
 
 #sort out dhcp config - no instructions on conf file!

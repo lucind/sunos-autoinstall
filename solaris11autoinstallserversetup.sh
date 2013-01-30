@@ -1,29 +1,36 @@
 #!/bin/bash
-# -- solaris 11 ai sever setup --
-set -x
 set -o verbose
+
+# -- solaris 11 ai sever setup --
+
+NAME=thlayli
+ADDR=10.1.87.99
+DOMAIN=ebs.modcloth.com
+DNSSERVER=10.1.5.21
+CLIENTIPSTART=10.1.87.101
+CLIENTIPNUM=99
 
 #identity and dns stuff
 netadm enable -p ncp Automatic
 netadm enable -p loc Automatic
 ipadm create-ip net0
-ipadm create-addr -a 10.0.2.15/24 net0
-echo "10.0.2.15 testai.modcloth.int testai" >>/etc/hosts
-route -p add default 10.0.2.15
+ipadm create-addr -a $ADDR/24 net0
+echo "$ADDR $NAME.$DOMAIN $NAME" >>/etc/hosts
+route -p add default $ADDR
 svccfg -s system/name-service/switch setprop 'config/host = astring: "files dns mdns"'
 svccfg -s system/name-service/switch refresh
-svccfg -s network/dns/client setprop 'config/search = astring: "(modcloth.int)"'
-svccfg -s network/dns/client setprop 'config/nameserver = net_address: (10.1.5.21 8.8.8.8)'
+svccfg -s network/dns/client setprop 'config/search = astring: "($DOMAIN)"'
+svccfg -s network/dns/client setprop 'config/nameserver = net_address: ($DNSSERVER)'
 svccfg -s network/dns/client refresh
-svccfg -s system/identity:node setprop 'config/nodename = astring: "testai"'
-svccfg -s system/identity:node setprop 'config/loopback = astring: "testai"'
+svccfg -s system/identity:node setprop 'config/nodename = astring: "$NAME"'
+svccfg -s system/identity:node setprop 'config/loopback = astring: "$NAME"'
 svccfg -s system/identity:node refresh
 nscfg export svc:/network/dns/client:default
 
 zfs create -o atime=off rpool/export/repoSolaris11
 pkgrepo create /export/repoSolaris11
-#pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 '*'
-pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 'screen'
+pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 '*'
+#pkgrecv -s http://pkg.oracle.com/solaris/release/ -d /export/repoSolaris11 'screen'
 zfs snapshot rpool/export/repoSolaris11@initialpkgrecv
 pkgrepo set -s /export/repoSolaris11 publisher/prefix=solaris
 pkgrepo refresh -s /export/repoSolaris11
@@ -49,8 +56,7 @@ svcadm enable /network/dns/multicast
 pkg set-publisher -g http://pkg.oracle.com/solaris/release solaris
 pkg install install/installadm
 zfs create rpool/export/auto_install
-#installadm create-service -i 10.0.2.101 -c 99 -a sparc -y
-installadm create-service -i 10.0.2.101 -c 99 -s /root/sol-11_1-ai-x86.iso -y
+installadm create-service -i $CLIENTIPSTART -c $CLIENTIPNUM -a sparc -y
 zfs snapshot rpool/export/auto_install@fresh
 installadm create-manifest -n default-sparc -f manifest/frith.xml -c mac=0:14:4f:ae:1b:7c
 installadm create-profile -n default-sparc -f sc_profiles/frith.xml -c mac=0:14:4f:ae:1b:7c

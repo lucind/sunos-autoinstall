@@ -20,7 +20,7 @@ route -p add default $ADDR
 svccfg -s system/name-service/switch setprop 'config/host = astring: "files dns mdns"'
 svccfg -s system/name-service/switch refresh
 svccfg -s network/dns/client setprop "config/search = astring: \"$DOMAIN\""
-svccfg -s network/dns/client setprop "config/nameserver = net_address: \($DNSSERVER\)"
+svccfg -s network/dns/client setprop "config/nameserver = net_address: ($DNSSERVER)"
 svccfg -s network/dns/client refresh
 nscfg export svc:/network/dns/client:default
 svccfg -s system/identity:node setprop config/nodename = astring: \"$NAME\"

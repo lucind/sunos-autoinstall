@@ -59,4 +59,7 @@ zfs create rpool/export/auto_install
 installadm create-service -i $CLIENTIPSTART -c $CLIENTIPNUM -a sparc -y
 zfs snapshot rpool/export/auto_install@fresh
 installadm create-manifest -n default-sparc -f manifest/frith.xml -c mac=0:14:4f:ae:1b:7c
-installadm create-profile -n default-sparc -f sc_profiles/frith.xml -c mac=0:14:4f:ae:1b:7c
+installadm create-manifest -n default-sparc -f manifest/frith.xml -c mac=0:14:4f:ae:1b:7c
+installadm create-profile -n default-sparc -f sc_profiles/inle.xml -c mac=0:14:4f:e5:cd:9c
+installadm create-profile -n default-sparc -f sc_profiles/inle.xml -c mac=0:14:4f:e5:cd:9c
+installadm -cmp

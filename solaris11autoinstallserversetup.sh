@@ -1,6 +1,6 @@
 #!/bin/bash
 set -o verbose
-
+set -x
 # -- solaris 11 ai sever setup --
 
 NAME=thlayli
@@ -17,15 +17,26 @@ ipadm create-ip net0
 ipadm create-addr -a $ADDR/24 net0
 echo "$ADDR $NAME.$DOMAIN $NAME" >>/etc/hosts
 route -p add default $ADDR
+
+svcadm disable -ts system/name-service/switch
 svccfg -s system/name-service/switch setprop 'config/host = astring: "files dns mdns"'
 svccfg -s system/name-service/switch refresh
+svcadm enable -rs system/name-service/switch 
+
+svcadm disable -ts network/dns/client
 svccfg -s network/dns/client setprop "config/search = astring: \"$DOMAIN\""
 svccfg -s network/dns/client setprop "config/nameserver = net_address: ($DNSSERVER)"
 svccfg -s network/dns/client refresh
+svcadm enable -rs network/dns/client 
 nscfg export svc:/network/dns/client:default
+
+svcadm disable -ts system/identity:node
 svccfg -s system/identity:node setprop config/nodename = astring: \"$NAME\"
 svccfg -s system/identity:node setprop config/loopback = astring: \"$NAME\"
 svccfg -s system/identity:node refresh
+svcadm enable -rs system/identity:node  
+
+exit 0
 
 zfs create -o atime=off rpool/export/repoSolaris11
 pkgrepo create /export/repoSolaris11
@@ -37,16 +48,9 @@ pkgrepo refresh -s /export/repoSolaris11
 pkgrepo rebuild -s /export/repoSolaris11
 svccfg -s application/pkg/server setprop pkg/inst_root=/export/repoSolaris11
 svccfg -s application/pkg/server setprop pkg/readonly=false
-svcadm disable application/pkg/server
-while [ $(sleep 1;svcs -H pkg/server |cut -f1 -d" ") != "disabled" ]
-  do echo "waiting for pkg/server service to go down"
-done
+svcadm disable -ts application/pkg/server
 svcadm refresh application/pkg/server
-svcadm enable application/pkg/server
-while [ $(sleep 1;svcs -H pkg/server |cut -f1 -d" ") != "online" ]
-  do echo "waiting for pkg/server service to come up"
-done
-
+svcadm enable -rs application/pkg/server
 pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
 
 #Enable Multicast DNS

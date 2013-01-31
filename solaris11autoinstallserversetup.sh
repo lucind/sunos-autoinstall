@@ -9,8 +9,6 @@ DOMAIN=ebs.modcloth.com
 DNSSERVER=10.1.5.21
 CLIENTIPSTART=10.1.87.101
 CLIENTIPNUM=99
-echo $NAME
-exit 1
 
 #identity and dns stuff
 netadm enable -p ncp Automatic

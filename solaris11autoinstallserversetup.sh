@@ -19,13 +19,13 @@ echo "$ADDR $NAME.$DOMAIN $NAME" >>/etc/hosts
 route -p add default $ADDR
 svccfg -s system/name-service/switch setprop 'config/host = astring: "files dns mdns"'
 svccfg -s system/name-service/switch refresh
-svccfg -s network/dns/client setprop config/search = astring: \"\($DOMAIN\)\"
+svccfg -s network/dns/client setprop config/search = astring: \"$DOMAIN\"
 svccfg -s network/dns/client setprop config/nameserver = net_address: \($DNSSERVER\)
 svccfg -s network/dns/client refresh
+scfg export svc:/network/dns/client:default
 svccfg -s system/identity:node setprop config/nodename = astring: \"$NAME\"
 svccfg -s system/identity:node setprop config/loopback = astring: \"$NAME\"
 svccfg -s system/identity:node refresh
-nscfg export svc:/network/dns/client:default
 
 zfs create -o atime=off rpool/export/repoSolaris11
 pkgrepo create /export/repoSolaris11

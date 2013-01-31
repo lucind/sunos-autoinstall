@@ -10,7 +10,10 @@ DNSSERVER=10.1.5.21
 CLIENTIPSTART=10.1.87.101
 CLIENTIPNUM=99
 
+svcs -xv|ggrep -E --color  "(.*)|$"; if [ $? = 0 ] ;then echo "Kindly attend to your disconsolate services, as listed heretofore, prior to calling this script."; exit 1;fi
+
 #identity and dns stuff
+svcadm disable -s /network/dns/multicast
 netadm enable -p ncp Automatic
 netadm enable -p loc Automatic
 ipadm create-ip net0
@@ -18,25 +21,32 @@ ipadm create-addr -a $ADDR/24 net0
 echo "$ADDR $NAME.$DOMAIN $NAME" >>/etc/hosts
 route -p add default $ADDR
 
+svcs -xv|ggrep -E --color  "(.*)|$"
+if [ $? = 0 ] ;then exit 1;fi
+
 svcadm disable -ts system/name-service/switch
 svccfg -s system/name-service/switch setprop 'config/host = astring: "files dns mdns"'
-svccfg -s system/name-service/switch refresh
+#svccfg -s system/name-service/switch refresh
+svcadm refresh system/name-service/switch 
 svcadm enable -rs system/name-service/switch 
 
 svcadm disable -ts network/dns/client
 svccfg -s network/dns/client setprop "config/search = astring: \"$DOMAIN\""
 svccfg -s network/dns/client setprop "config/nameserver = net_address: ($DNSSERVER)"
-svccfg -s network/dns/client refresh
+#svccfg -s network/dns/client refresh
+svcadm refresh network/dns/client 
 svcadm enable -rs network/dns/client 
-nscfg export svc:/network/dns/client:default
+nscfg export svc:/network/dns/client
 
 svcadm disable -ts system/identity:node
 svccfg -s system/identity:node setprop config/nodename = astring: \"$NAME\"
 svccfg -s system/identity:node setprop config/loopback = astring: \"$NAME\"
-svccfg -s system/identity:node refresh
+#svccfg -s system/identity:node refresh
+svcadm refresh system/identity:node  
 svcadm enable -rs system/identity:node  
 
-exit 0
+svcs -xv|ggrep -E --color  "(.*)|$"
+if [ $? = 0 ] ;then exit 1;fi
 
 zfs create -o atime=off rpool/export/repoSolaris11
 pkgrepo create /export/repoSolaris11
@@ -54,7 +64,7 @@ svcadm enable -rs application/pkg/server
 pkgsend publish -d firstboot/proto -s http://localhost firstboot/firstboot.p5m
 
 #Enable Multicast DNS
-svcadm enable /network/dns/multicast
+svcadm enable -rs /network/dns/multicast
 
 #Install Install Service
 pkg set-publisher -g http://pkg.oracle.com/solaris/release solaris

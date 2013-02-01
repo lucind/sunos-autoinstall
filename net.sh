@@ -8,7 +8,6 @@ DOMAIN=ebs.modcloth.com
 DNSSERVER=10.1.5.21
 CLIENTIPSTART=10.1.87.101
 CLIENTIPNUM=99
-FORCE=$1
 
 function svcck {
   true

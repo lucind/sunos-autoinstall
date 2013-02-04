@@ -22,11 +22,11 @@ while getopts "h:a:d:n:s:c:fv" optname
 source svcck.sh
 
 svcck
-./net.sh
+source net.sh
 svcck
-./pkg.sh
+source pkg.sh
 svcck
-./ai.sh
+source ai.sh
 svcck
-./clients.sh
+source clients.sh
 svcck

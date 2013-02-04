@@ -26,7 +26,6 @@ svccfg -s network/dns/client setprop "config/nameserver = net_address: ($DNSSERV
 svcadm refresh network/dns/client
 svcadm enable -rs network/dns/client
 nscfg export svc:/network/dns/client
-svcs -xv|ggrep -E --color  "(.*)|$"
 
 svcck
 
@@ -36,4 +35,3 @@ svccfg -s system/identity:node setprop config/loopback = astring: \"$NAME\"
 #svccfg -s system/identity:node refresh
 svcadm refresh system/identity:node
 svcadm enable -rs system/identity:node
-svcs -xv|ggrep -E --color  "(.*)|$"

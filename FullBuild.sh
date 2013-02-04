@@ -1,11 +1,11 @@
 #!/bin/bash
 
-h=thlayli
-a=10.1.87.99
-d=ebs.modcloth.com
-n=10.1.5.21
-s=10.1.87.101
-c=99
+export h=thlayli
+export a=10.1.87.99
+export d=ebs.modcloth.com
+export n=10.1.5.21
+export s=10.1.87.101
+export c=99
 
 while getopts "h:a:d:n:s:c:fv" optname
   do

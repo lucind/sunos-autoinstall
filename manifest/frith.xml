@@ -21,7 +21,7 @@
       </destination>
       <source>
         <publisher name="solaris">
-          <origin name="http://thlayli"/>
+          <origin name="http://thlayli.ebs.modcloth.com"/>
         </publisher>
       </source>
       <software_data action="install">

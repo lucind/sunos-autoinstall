@@ -6,7 +6,7 @@ netadm enable -p ncp Automatic
 netadm enable -p loc Automatic
 ipadm create-ip net0
 ipadm create-addr -a $a/24 net0
-echo "$h $n.$d $h" >>/etc/hosts
+echo "$n $h.$d $h" >>/etc/hosts
 route -p add default $a
 
 svcck

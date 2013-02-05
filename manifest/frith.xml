@@ -26,7 +26,7 @@
       </source>
       <software_data action="install">
         <name>pkg:/entire@0.5.11-0.175.1</name>
-        <name>pkg:/group/system/solaris-auto-install</name>
+        <name>pkg:/group/system/solaris-large-server</name>
         <name>pkg:/firstboot</name>
       </software_data>
     </software>

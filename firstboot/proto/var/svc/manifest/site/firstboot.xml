@@ -15,7 +15,7 @@
             <service_fmri value="svc:/milestone/multi-user"/>
         </dependency>
         <exec_method timeout_seconds="3600" type="method" name="start"
-          exec="/lib/svc/method/site/firstboot.sh"/>
+          exec="/var/svc/method/site/firstboot.sh"/>
         <!--
             The exec attribute below can be changed to a command that SMF
             should execute to stop the service.  See smf_method(5) for more

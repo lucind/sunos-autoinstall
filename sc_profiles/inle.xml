@@ -4,10 +4,8 @@
       <instance name="default" enabled="true">
         <property_group name="user_account">
           <propval name="login" value="danger"/>
-          <propval name="password" value="LK"/>
         </property_group>
         <property_group name="root_account">
-            <propval name="password" value="x"/>
             <propval name="type" value="normal"/>
         </property_group>
       </instance>

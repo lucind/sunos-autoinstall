@@ -63,8 +63,12 @@ w
 q
 EOF
 
-#echo "install chef"
+#echo "Chef install -- Silly Linux kiddies think that gawk is awk and are using some hipster gawk slang in their install script, so pull a switcheroo, install chef, and repair afterwards (sorry, gross, I know, but I didn't want to mess with ominibus and custom bootstraps, etc ;)"
+mv /usr/bin/awk ~
+ln -s /usr/bin/gawk /usr/bin/awk
 curl -L https://www.opscode.com/chef/install.sh | sudo bash
+rm /usr/bin/awk
+mv ~/awk /usr/bin/awk
 
 #echo "Record that this script's work is done"
 svccfg -s site/firstboot:default setprop config/completed = true

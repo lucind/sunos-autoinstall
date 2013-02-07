@@ -15,9 +15,8 @@ bename=`beadm list -Hd|nawk -F ';' '$3 ~ /R/ {print $1}'`
 beadm create ${bename}.orig
 #echo "Original boot environment saved as ${bename}.orig"
 
-#echo "Convert root into a real user and delete backdoor user we were forced by AI to create during install"
-userdel -r ops
-rolemod -K type=normal root
+#echo "Delete backdoor user we were forced by AI to create during install"
+userdel -r danger
 
 #echo "slap ops key in root home"
 mkdir ~root/.ssh

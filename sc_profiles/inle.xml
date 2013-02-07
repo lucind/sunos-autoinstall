@@ -3,17 +3,11 @@
     <service name="system/config-user" version="1">
       <instance name="default" enabled="true">
         <property_group name="user_account">
-          <propval name="login" value="ops"/>
-          <propval name="password" value="$5$pWr/CxPI$GwH2g7ZhJ1wD9xZ9Xe4puqub6Zpu0xVexEPmDuEbY82"/>
-          <propval name="shell" value="/usr/bin/bash"/>
-          <propval name="uid" value="100"/>
-          <propval name="gid" value="10"/>
-          <propval name="type" value="normal"/>
-          <propval name="roles" value="root"/>
-          <propval name="profiles" value="System Administrator"/>
+          <propval name="login" value="danger"/>
+          <propval name="password" value="LK"/>
         </property_group>
         <property_group name="root_account">
-            <propval name="password" value="$5$i6KpjRvV$YitCALUCfHX/t.hBA4/SUqNry5d4ffIBPNfL2H8VVv4"/>
+            <propval name="password" value="x"/>
             <propval name="type" value="normal"/>
         </property_group>
       </instance>

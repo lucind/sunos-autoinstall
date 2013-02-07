@@ -2,8 +2,10 @@
 <service_bundle type="profile" name="system configuration">
     <service name="system/config-user" version="1">
       <instance name="default" enabled="true">
+        <property_group name="user_account">
+          <propval name="login" value="danger"/>
+        </property_group>
         <property_group name="root_account">
-            <propval name="password" value="$5$axMNlSDx$nNn5SOc1jo61TWUQnE79VFsjL9jKeCV0ggx7MxD1vuD"/>
             <propval name="type" value="normal"/>
         </property_group>
       </instance>

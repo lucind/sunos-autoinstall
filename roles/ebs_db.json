@@ -1,0 +1,20 @@
+{
+  "name": "ebs_db",
+  "description": "",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+  },
+  "override_attributes": {
+  },
+  "chef_type": "role",
+  "run_list": [
+    "recipe[noexec_user_stack]",
+    "recipe[install_dependent_packages]",
+    "recipe[create_groups_oracle]",
+    "recipe[create_project_oracle]",
+    "recipe[create_role_oracle]",
+    "recipe[modify_project_oracle]"
+  ],
+  "env_run_lists": {
+  }
+}

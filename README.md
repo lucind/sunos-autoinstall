@@ -57,5 +57,9 @@ your software stack (which we do with chef, as provided for in firstboot).
 If you're using chef, you can simply run a knife bootstrap {server.fqdn}
 to reach out to your new clients and get your orchestration fired up.
 
+knife bootstrap frith.ebs.modcloth.com
+knife node run_list add frith.ebs.modcloth.com "role[ebs_db]"
+knife ssh fqdn:frith.ebs.modcloth.com chef-client -xroot
+
 Don't forget to change root and default user keys and passwords (or have your
 automation do so) before turning these puppies loose on the Intertubes.

@@ -13,10 +13,12 @@ bash "create_role_oracle" do
     (rolemod -K type=role $NAME &> /dev/null) || roleadd -u $ID -g oinstall -G dba,oper -K  project=oracleproject -K roleauth=user -m $NAME
 
 # create central Oracle inventory directory
-if [ ! -x /var/opt/oracle ]; then mkdir -p /var/opt/oracle; fi
-chown oracle:oinstall /var/opt/oracle
-chmod 775 /var/opt/oracle
-
+if [ ! -x /var/opt/oracle/inventory ]; then mkdir -p /var/opt/oracle/inventory; fi
+echo "inventory_loc=/var/opt/oracle/inventory
+inst_group=oinstall
+" > /var/opt/oracle/oraInst.loc
+chown -R oracle:oinstall /var/opt/oracle
+chmod -R 770 /var/opt/oracle
 # create oracle environment variable setup
 if [ ! -x ~oracle/tmp ]; then su - oracle -c 'mkdir ~/tmp'; fi
 (grep 'umask 022' ~oracle/.bash_profile &>/dev/null) || echo 'umask 022' >> ~oracle/.bash_profile; chown oracle:install ~oracle/.bash_profile

@@ -11,20 +11,20 @@ template "/export/home/oracle/config.xml" do
 end
 
 bash "create vncserver, fire off OIU autoinstall sequence (requires X), kill VNC server" do
-  user "oracle"
+  user "root"
   code <<-EOH
 set -o verbose
 mv /usr/bin/unzip /usr/bin/unzip.orig
 ln -s /net/thlayli/rpool/StageR12/startCD/Disk1/rapidwiz/unzip/Solaris/unzip /usr/bin/unzip
 pkill Xvnc
 mkdir ~/.vnc
-echo "./rapidwiz -config ~oracle/config.xml -silent" > ~/.vnc/xstartup
+echo "cd /net/thlayli/rpool/StageR12/startCD/Disk1/rapidwiz" >~/.vnc/xstartup
+echo "./rapidwiz -config ~oracle/config.xml -silent" >> ~/.vnc/xstartup
 echo "
 
 " |vncpasswd -f >~/.vnc/passwd
-vncserver :0 -autokill
+vncserver :0 -fg -autokill
 rm -Rf ~/.vnc
-cd /net/thlayli/rpool/StageR12/startCD/Disk1/rapidwiz
 rm /usr/bin/unzip
 mv /usr/bin/unzip.orig /usr/bin/unzip
 EOH

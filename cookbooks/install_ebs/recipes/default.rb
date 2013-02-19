@@ -13,7 +13,27 @@ bash "downgrade unzip to appease oracle install script" do
   code <<-EOH
 set -o verbose
 mv /usr/bin/unzip /usr/bin/unzip.orig
-ln -s /net/thlayli/rpool/StageR12/startCD/Disk1/rapidwiz/unzil/Solaris/unzip /usr/bin/unzip
+ln -s /net/thlayli/rpool/StageR12/startCD/Disk1/rapidwiz/unzip/Solaris/unzip /usr/bin/unzip
+EOH
+end
+
+bash "vncserver" do
+  user "oracle"
+  code <<-EOH
+set -o verbose
+kill `echo ~/.vnc/*pid`
+rm -Rf ~/.vnc
+echo "aa8151ce928eff8308a9aa6da3d8feed
+aa8151ce928eff8308a9aa6da3d8feed
+" |vncserver :0 -autokill
+EOH
+end
+bash "kill vncserver" do
+  user "oracle"
+  code <<-EOH
+set -o verbose
+vncserver -kill :0
+rm -Rf ~/.vnc
 EOH
 end
 
@@ -22,7 +42,6 @@ bash "install_ebs" do
   code <<-EOH
 set -o verbose
 cd /net/thlayli/rpool/StageR12/startCD/Disk1/rapidwiz
-
 ./rapidwiz -config ~oracle/config.xml -silent
 EOH
 end

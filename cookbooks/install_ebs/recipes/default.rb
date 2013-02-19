@@ -2,55 +2,29 @@
 # Recipe:: default
 # Copyright 2013, ModCloth
 # Copyright (c) 2013 ModCloth. Licensed under the Apache License,  Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
 template "/export/home/oracle/config.xml" do
   source "config.xml.erb"
   mode 770
   owner "oracle"
   group "oinstall"
 end
-bash "downgrade unzip to appease oracle install script" do
-  user "root"
+
+bash "create vncserver, fire off OIU autoinstall sequence (requires X), kill VNC server" do
+  user "oracle"
   code <<-EOH
 set -o verbose
 mv /usr/bin/unzip /usr/bin/unzip.orig
 ln -s /net/thlayli/rpool/StageR12/startCD/Disk1/rapidwiz/unzip/Solaris/unzip /usr/bin/unzip
-EOH
-end
+pkill Xvnc
+mkdir ~/.vnc
+echo "./rapidwiz -config ~oracle/config.xml -silent" > ~/.vnc/xstartup
+echo "
 
-bash "vncserver" do
-  user "oracle"
-  code <<-EOH
-set -o verbose
-kill `echo ~/.vnc/*pid`
+" |vncpasswd -f >~/.vnc/passwd
+vncserver :0 -autokill
 rm -Rf ~/.vnc
-echo "aa8151ce928eff8308a9aa6da3d8feed
-aa8151ce928eff8308a9aa6da3d8feed
-" |vncserver :0 -autokill
-EOH
-end
-bash "kill vncserver" do
-  user "oracle"
-  code <<-EOH
-set -o verbose
-vncserver -kill :0
-rm -Rf ~/.vnc
-EOH
-end
-
-bash "install_ebs" do
-  user "oracle"
-  code <<-EOH
-set -o verbose
 cd /net/thlayli/rpool/StageR12/startCD/Disk1/rapidwiz
-./rapidwiz -config ~oracle/config.xml -silent
-EOH
-end
-
-bash "replace original unzip" do
-  user "root"
-  only_if "ls /usr/bin/unzip.orig"
-  code <<-EOH
-set -o verbose
 rm /usr/bin/unzip
 mv /usr/bin/unzip.orig /usr/bin/unzip
 EOH

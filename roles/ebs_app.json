@@ -13,7 +13,8 @@
     "recipe[create_groups_oracle]",
     "recipe[create_project_oracle]",
     "recipe[create_role_oracle]",
-    "recipe[modify_project_oracle]"
+    "recipe[modify_project_oracle]",
+    "recipe[install_ebs]"
   ],
   "env_run_lists": {
   }

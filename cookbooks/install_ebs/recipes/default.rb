@@ -12,6 +12,7 @@ end
 
 bash "create vncserver, fire off OUI autoinstall sequence (requires X), kill VNC server" do
   user "root"
+  timeout 36000
   code <<-EOH
 set -o verbose
 mv /usr/bin/unzip /usr/bin/unzip.orig

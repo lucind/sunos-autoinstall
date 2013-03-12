@@ -25,7 +25,7 @@ echo "./rapidwiz -config ~oracle/config.xml -silent -waitforreturn" >> ~/.vnc/xs
 chmod +x ~/.vnc/xstartup
 echo "Wachter
 Wachter
-" |vncserver :0 -fg
+" |vncserver :0 -fg -autokill
 rm /usr/bin/unzip
 mv /usr/bin/unzip.orig /usr/bin/unzip
 EOH

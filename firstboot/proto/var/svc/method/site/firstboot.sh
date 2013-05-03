@@ -63,6 +63,10 @@ w
 q
 EOF
 
+#Hate to do this, but have to substitute mangy hippie awk for real awk to get buggy Chef 11 omnibus installer to run.  Please remove this hack when they fix CHEF-3471. There's a corrolary recipe in the cookbooks that undoes this.
+mv /usr/bin/awk /usr/bin/awk.orig
+ln -s /usr/bin/gawk /usr/bin/awk
+
 #echo "Chef install"
 curl -L https://www.opscode.com/chef/install.sh | sudo bash
 
